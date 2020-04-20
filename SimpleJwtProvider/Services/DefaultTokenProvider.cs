@@ -196,5 +196,44 @@ namespace SimpleJwtProvider.Services
                 return Convert.ToBase64String(result);
             }
         }
+
+        public string GenerateSymmetricTokenAsync(IEnumerable<Claim> claims, JwtTokenOptions options)
+        {
+            _logger.LogInformation($"Generating a token with provided claims");
+
+            var securityKey = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes(options.SecretKey));
+            var credentials = new SigningCredentials(
+                securityKey, SecurityAlgorithms.HmacSha256);
+
+            var header = new JwtHeader(credentials);
+            var payload = new JwtPayload(
+                issuer: options.Issuer,
+                audience: options.Audience,
+                claims,
+                notBefore: DateTime.Now,
+                expires: DateTime.Now.AddMinutes(options.TokenExpiryInMinutes),
+                issuedAt: DateTime.Now);
+
+            var token = new JwtSecurityToken(header, payload);
+
+            _logger.LogInformation($"Token generated with provided claims");
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public IEnumerable<Claim> DecodeToken(string bearerToken)
+        {
+            try
+            {
+                _logger.LogInformation($"Decoding JWT Token");
+                var token = new JwtSecurityToken(bearerToken);
+                return token.Claims;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogWarning($"Exception decoding token: {ex.Message} || {ex.StackTrace}");
+                return null;
+            }
+        }
     }
 }

@@ -6,7 +6,7 @@
     <Description>A Simple implementation of a JWT Provider for .Net Core.</Description>
     <PackageTags>Jwt Security Token, Simple Provider</PackageTags>
     <PackageId>Core.SimpleJwtProvider</PackageId>
-    <Version>1.0.3</Version>
+    <Version>1.0.4</Version>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <RepositoryUrl>https://github.com/GingerNeil12/Core.SimpleJwtProvider</RepositoryUrl>
   </PropertyGroup>
